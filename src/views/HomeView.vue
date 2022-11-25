@@ -40,17 +40,325 @@
               class="btn btn-info"
               @click="
                 getStudents();
+                LoginInsuper();
+              "
+            >
+              Log in as super admin
+            </button>
+          </div>
+
+          <div class="d-grid">
+            <button
+              class="btn btn-info mt-3"
+              @click="
+                getStudents();
                 LoginIn();
               "
             >
-              Log in
+              Log in as manager
             </button>
           </div>
         </form>
       </div>
     </div>
   </div>
-  <div v-if="!logginn">
+  <!--Admin-->
+  <div v-if="!logginn && user == 'super'">
+    <div class="text-center d1">
+      <h1 class="">ADMIN DASHBOARD</h1>
+      <button
+        class="btn btn-success"
+        style="margin-left: 90%; margin-top: -7%"
+        @click="logginn = !loggin"
+      >
+        Log Out
+      </button>
+    </div>
+    <!--Button Add new-->
+    <div class="container">
+      <div class="row d-flex justify-content-between">
+        <button class="btn btn-info col-2" @click="addnew = true">
+          <FIcons class="icon" :icon="['fas', 'user']" />Add New Admin
+        </button>
+      </div>
+    </div>
+    <hr />
+
+    <!--Table-->
+
+    <div class="container">
+      <caption class="row">
+        Admin List({{
+          students_data.length
+        }})
+      </caption>
+
+      <table class="table table-striped table-dark">
+        <!--  <table class="table table-striped ">-->
+        <thead class="bg-success text-light">
+          <tr class="text-center">
+            <th><FIcons :icon="['fas', 'id-badge']" />ID</th>
+            <th><FIcons :icon="['fas', 'user']" />Name</th>
+            <th><FIcons :icon="['fas', 'phone']" />Phone</th>
+            <th><FIcons :icon="['fas', 'envelope']" />Email</th>
+            <th><FIcons :icon="['fas', 'lock']" />Password</th>
+            <th><FIcons :icon="['fas', 'user-gear']" />Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="text-center" v-for="(ad, index) in adminData" :key="index">
+            <td>{{ index + 1 }}</td>
+            <td>{{ ad.name }}</td>
+            <td>{{ ad.phone }}</td>
+            <td>{{ ad.email }}</td>
+            <td>{{ ad.password }}</td>
+
+            <td>
+              <button
+                class="btn btn-warning"
+                @click="
+                  update = true;
+                  selectAdmin(ad);
+                "
+              >
+                <FIcons :icon="['fas', 'user-edit']" />Update
+              </button>
+              <button
+                class="btn btn-danger"
+                style="margin-left: 10px"
+                @click="
+                  deleted = true;
+                  selectAdmin(ad);
+                "
+              >
+                <FIcons :icon="['fas', 'user-times']" />Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!--Add New Student-->
+    <!-- The Modal -->
+
+    <div class="modal-dialog addnew p-2" v-if="addnew">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header justify-content-between">
+          <h4 class="modal-title text-info">Add New Admin</h4>
+          <button
+            type="button"
+            class="btn-close"
+            style="margin-left: 54%"
+            @click.prevent="addnew = false"
+          ></button>
+          <hr />
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <form action="#" method="post" @click.prevent>
+            <div class="form-floating m-2">
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                placeholder="Name"
+                name="name"
+                v-model.trim="addnewadmin.name"
+              />
+
+              <label for="name"> <FIcons :icon="['fas', 'user']" />Name</label>
+            </div>
+            <div class="form-floating m-2">
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                placeholder=" email"
+                name="email"
+                v-model.trim="addnewadmin.email"
+              />
+              <label for="email">
+                <FIcons :icon="['fas', 'envelope']" />Email</label
+              >
+            </div>
+            <div class="form-floating m-2">
+              <input
+                type="tel"
+                class="form-control"
+                id="tel"
+                placeholder=" Phone"
+                name="tel"
+                v-model.trim="addnewadmin.phone"
+              />
+              <label for="emaiql">
+                <FIcons :icon="['fas', 'phone']" />Phone</label
+              >
+            </div>
+
+            <div class="form-floating m-2">
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                placeholder=" password"
+                name="password"
+                v-model.trim="addnewadmin.password"
+              />
+              <label for="emaiql">
+                <FIcons :icon="['fas', 'lock']" />password</label
+              >
+            </div>
+
+            <hr />
+            <div class="d-grid">
+              <button class="btn btn-info" @click="AddNewAdmin()">
+                Add New Admin
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!--Update-->
+
+    <div class="modal-dialog addnew p-2" v-if="update">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header justify-content-between">
+          <h4 class="modal-title text-warning">Update Admin</h4>
+          <button
+            type="button"
+            class="btn-close"
+            style="margin-left: 54%"
+            @click="update = false"
+          ></button>
+          <hr />
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <form action="#" method="post" @click.prevent>
+            <div class="form-floating m-2">
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                placeholder="Name"
+                name="name"
+                v-model.trim="currentadmin.name"
+              />
+
+              <label for="name"> <FIcons :icon="['fas', 'user']" />Name</label>
+            </div>
+            <div class="form-floating m-2">
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                placeholder=" email"
+                name="email"
+                v-model.trim="currentadmin.email"
+              />
+              <label for="email">
+                <FIcons :icon="['fas', 'envelope']" />Email</label
+              >
+            </div>
+
+            <div class="form-floating m-2">
+              <input
+                type="tel"
+                class="form-control"
+                id="tel"
+                placeholder=" Phone"
+                name="tel"
+                v-model.trim="currentadmin.phone"
+              />
+              <label for="emaiql">
+                <FIcons :icon="['fas', 'phone']" />Phone</label
+              >
+            </div>
+            <div class="form-floating m-2">
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                placeholder=" Phone"
+                name="password"
+                v-model.trim="currentadmin.password"
+              />
+              <label for="emaiql">
+                <FIcons :icon="['fas', 'phone']" />Password</label
+              >
+            </div>
+
+            <hr />
+            <div class="d-grid">
+              <button class="btn btn-warning" @click="updateAdmin()">
+                Update Admin
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!--Delete One-->
+    <div class="modal-dialog addnew p-2" v-if="deleted">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header justify-content-between">
+          <h4 class="modal-title text-danger">Delete Current Admin</h4>
+          <button
+            type="button"
+            class="btn-close"
+            style="margin-left: 42%"
+            @click="deleted = false"
+          ></button>
+          <hr />
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body text-center">
+          <form action="#" method="post" @click.prevent>
+            <hr />
+
+            <h6 class="text-danger">Are You Sure ?</h6>
+            <p>
+              <span>ID:- {{ currentadmin.id }}</span
+              ><br />
+
+              <span>Email:- {{ currentadmin.email }}</span
+              ><br />
+              <span>Name:- {{ currentadmin.name }}</span
+              ><br />
+              <span>Phone:- {{ currentadmin.phone }}</span
+              ><br />
+              <span>Password:- {{ currentadmin.password }}</span
+              ><br />
+            </p>
+            <div class="d-grid m-2">
+              <button class="btn btn-danger" @click="deleteAdmin()">
+                Yes, sure...
+              </button>
+            </div>
+            <div class="d-grid m-2">
+              <button class="btn btn-success" @click="deleted = false">
+                No...
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!--Title-->
+  </div>
+  <!--Student-->
+  <div v-if="!logginn && user == 'manager'">
     <div class="text-center d1">
       <h1 class="">Students Rigestration</h1>
       <button
@@ -216,10 +524,7 @@
         <!-- Modal body -->
         <div class="modal-body">
           <form action="#" method="post" @click.prevent>
-            <div
-              class="form-floating m-2"
-              :class="{ 'form-error': v$.addnewstudent.name.$error }"
-            >
+            <div class="form-floating m-2">
               <input
                 type="text"
                 class="form-control"
@@ -230,14 +535,8 @@
               />
 
               <label for="name"> <FIcons :icon="['fas', 'user']" />Name</label>
-              <span class="errorfeedback" v-if="v$.addnewstudent.name.$error">
-                {{ v$.addnewstudent.name.$errors[0].$message }}
-              </span>
             </div>
-            <div
-              class="form-floating m-2"
-              :class="{ 'form-error': v$.addnewstudent.email.$error }"
-            >
+            <div class="form-floating m-2">
               <input
                 type="email"
                 class="form-control"
@@ -249,14 +548,8 @@
               <label for="email">
                 <FIcons :icon="['fas', 'envelope']" />Email</label
               >
-              <span class="errorfeedback" v-if="v$.addnewstudent.email.$error">
-                {{ v$.addnewstudent.email.$errors[0].$message }}
-              </span>
             </div>
-            <div
-              class="form-floating m-2"
-              :class="{ 'form-error': v$.addnewstudent.phone.$error }"
-            >
+            <div class="form-floating m-2">
               <input
                 type="tel"
                 class="form-control"
@@ -268,9 +561,6 @@
               <label for="emaiql">
                 <FIcons :icon="['fas', 'phone']" />Phone</label
               >
-              <span class="errorfeedback" v-if="v$.addnewstudent.phone.$error">
-                {{ v$.addnewstudent.phone.$errors[0].$message }}
-              </span>
             </div>
             <div class="form-floating" style="margin-left: 36%">
               <div class="dropdown divdrdropdown">
@@ -342,10 +632,7 @@
         <!-- Modal body -->
         <div class="modal-body">
           <form action="#" method="post" @click.prevent>
-            <div
-              class="form-floating m-2"
-              :class="{ 'form-error': v$.currentstudent.name.$error }"
-            >
+            <div class="form-floating m-2">
               <input
                 type="text"
                 class="form-control"
@@ -357,10 +644,7 @@
 
               <label for="name"> <FIcons :icon="['fas', 'user']" />Name</label>
             </div>
-            <div
-              class="form-floating m-2"
-              :class="{ 'form-error': v$.currentstudent.email.$error }"
-            >
+            <div class="form-floating m-2">
               <input
                 type="email"
                 class="form-control"
@@ -372,14 +656,8 @@
               <label for="email">
                 <FIcons :icon="['fas', 'envelope']" />Email</label
               >
-              <span class="errorfeedback" v-if="v$.currentstudent.email.$error">
-                {{ v$.currentstudent.email.$errors[0].$message }}
-              </span>
             </div>
-            <div
-              class="form-floating m-2"
-              :class="{ 'form-error': v$.currentstudent.phone.$error }"
-            >
+            <div class="form-floating m-2">
               <input
                 type="tel"
                 class="form-control"
@@ -391,9 +669,6 @@
               <label for="emaiql">
                 <FIcons :icon="['fas', 'phone']" />Phone</label
               >
-              <span class="errorfeedback" v-if="v$.currentstudent.phone.$error">
-                {{ v$.currentstudent.phone.$errors[0].$message }}
-              </span>
             </div>
             <div class="form-floating" style="margin-left: 36%">
               <div class="dropdown divdrdropdown">
@@ -534,13 +809,12 @@
 <script>
 //Validation
 import axios from "axios";
-import useValidate from "@vuelidate/core";
-import { required, email, minLength } from "@vuelidate/validators";
 export default {
   name: "HomeView",
   data() {
     return {
       //Validate
+      user: "",
       update: false,
       addnew: false,
       deleted: false,
@@ -549,7 +823,7 @@ export default {
       adminPass: "",
       logginn: true,
       adminData: [],
-      v$: useValidate(),
+      superadminData: [],
       Dropdown_Major: "Select     Major",
       Dropdown_Semester: "Select Semester",
       Dropdown_Majordb: "Select     Major",
@@ -564,7 +838,14 @@ export default {
         major: "",
         semester: "",
       },
+      addnewadmin: {
+        name: "",
+        email: "",
+        phone: "",
+        password: "",
+      },
       currentstudent: {},
+      currentadmin: {},
 
       Majors: [
         "InformationTechnology",
@@ -584,23 +865,7 @@ export default {
       Semestersdb: [1, 2, 3, 4, 5, 6, 7, 8],
     };
   },
-  //Validations
-  validations() {
-    return {
-      addnewstudent: {
-        name: { required, minLength: minLength(4) },
-        email: { required, email },
-        phone: { required, minLength: minLength(9) },
-        major: { required },
-        semester: { required },
-      },
-      currentstudent: {
-        name: { required, minLength: minLength(4) },
-        email: { required, email },
-        phone: { required, minLength: minLength(9) },
-      },
-    };
-  },
+
   //when do auto refresh for page
   mounted() {
     this.getStudents();
@@ -625,7 +890,7 @@ export default {
       this.currentstudent.semester = m;
       this.addnewstudent.semester = m;
     },
-    //validate for add new student
+    // add new student
     async AddNewStudent() {
       let formData = this.toFormData(this.addnewstudent);
       let resualts = await axios.post(
@@ -643,6 +908,24 @@ export default {
         }
       }
     },
+    // add new Admin
+    async AddNewAdmin() {
+      let formData = this.toFormData(this.addnewadmin);
+      let resualts = await axios.post(
+        `http://localhost/projects/vueandphp/registrationsystem/src/api/student.php?action=createadmin`,
+        formData
+      );
+      const resualtData = resualts.data;
+      if (resualts.status == 200) {
+        if (resualtData.error) {
+          this.error_mssage = resualtData.errormessage;
+        } else {
+          this.success_message = "Success";
+          this.addnewadmin = {};
+          this.getStudents();
+        }
+      }
+    },
     // validate for update //Update
     toFormDataUpdate(obj) {
       var fu = new FormData();
@@ -653,6 +936,7 @@ export default {
 
       return fu;
     },
+    //updateStudent
     async updateStudent() {
       let formData = this.toFormData(this.currentstudent);
       let resualts = await axios.post(
@@ -671,6 +955,25 @@ export default {
       }
       console.log(this.students_data);
     },
+
+    //updateAdmin
+    async updateAdmin() {
+      let formData = this.toFormData(this.currentadmin);
+      let resualts = await axios.post(
+        `http://localhost/projects/vueandphp/registrationsystem/src/api/student.php?action=updateadmin`,
+        formData
+      );
+      const resualtData = resualts.data;
+      if (resualts.status == 200) {
+        if (resualtData.error) {
+          this.error_mssage = resualtData.errormessage;
+        } else {
+          this.update = false;
+          this.currentadmin = {};
+          this.getStudents();
+        }
+      }
+    },
     // for show students(read)
     async getStudents() {
       let resualts = await axios.get(
@@ -684,6 +987,7 @@ export default {
         } else {
           this.students_data = resualtData.students;
           this.adminData = resualtData.admins;
+          this.superadminData = resualtData.superadmin;
         }
       }
     },
@@ -751,25 +1055,56 @@ export default {
         }
       }
     },
+    async deleteAdmin() {
+      let formData = this.toFormData(this.currentadmin);
+      let resualts = await axios.post(
+        `http://localhost/projects/vueandphp/registrationsystem/src/api/student.php?action=deleteadmin`,
+        formData
+      );
+      const resualtData = resualts.data;
+      if (resualts.status == 200) {
+        if (resualtData.error) {
+          this.error_mssage = resualtData.errormessage;
+        } else {
+          this.deleted = false;
+          this.currentadmin = [];
+          this.getStudents();
+        }
+      }
+    },
 
     //selectStudent
     selectStudent(s) {
       this.currentstudent = s;
     },
-    //Log in
+    //selectAdmin
+    selectAdmin(st) {
+      this.currentadmin = st;
+    },
+    //Log in manager
     LoginIn() {
       for (let i = 0; i < this.adminData.length; i++) {
         if (
           this.adminData[i].email == this.adminemail &&
           this.adminData[i].password == this.adminPass
         ) {
-          this.error_mssage = "";
-          console.log(this.error_mssage + "c");
           this.logginn = false;
+          this.user = "manager";
         } else {
           this.error_mssage = "Email Or Password Not Correct";
 
-          console.log(this.error_mssage);
+        }
+      }
+    },
+    //Log in SuperAdmin
+    LoginInsuper() {
+      for (let i = 0; i < this.superadminData.length; i++) {
+        if (
+          this.superadminData[i].email == this.adminemail &&
+          this.superadminData[i].password == this.adminPass
+        ) {
+          this.logginn = false;
+          this.user = "super";
         }
       }
     },
