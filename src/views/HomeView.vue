@@ -62,6 +62,7 @@
       </div>
     </div>
   </div>
+
   <!--Admin-->
   <div v-if="!logginn && user == 'super'">
     <div class="text-center d1">
@@ -357,6 +358,7 @@
 
     <!--Title-->
   </div>
+
   <!--Student-->
   <div v-if="!logginn && user == 'manager'">
     <div class="text-center d1">
@@ -437,7 +439,7 @@
 
     <div
       class="alert alert-danger alert-dismissible alretdiv"
-      v-if="error_mssage"
+      v-if="!error_mssage"
     >
       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
       Deleted All
@@ -805,7 +807,6 @@
   </div>
 </template>
 
-
 <script>
 //Validation
 import axios from "axios";
@@ -955,7 +956,6 @@ export default {
       }
       console.log(this.students_data);
     },
-
     //updateAdmin
     async updateAdmin() {
       let formData = this.toFormData(this.currentadmin);
@@ -1090,9 +1090,9 @@ export default {
         ) {
           this.logginn = false;
           this.user = "manager";
+          this.error_mssage = "";
         } else {
           this.error_mssage = "Email Or Password Not Correct";
-
         }
       }
     },
@@ -1111,6 +1111,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .d1 {
   background-color: rgb(59, 81, 81);
