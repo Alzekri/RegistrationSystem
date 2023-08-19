@@ -44,3 +44,7 @@ npm run build
 ```sh
 npm run lint
 ```
+
+### Pictures
+
+You can see some pictures of the implementation here (src/pictures)

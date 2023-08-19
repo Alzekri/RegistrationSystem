@@ -2,7 +2,7 @@
 <template>
   <!-- NavBar -->
   <div class="row text-center pt-3 d1">
-    <h1 class="col-8 text-end">ADMIN DASHBOARD</h1>
+    <h1 class="col-8 text-end">{{ title }}</h1>
     <div class="col-4 text-end pe-5">
       <div class="bb">
         <button class="btn btn-info" @click="logout()">Log out</button>
@@ -12,6 +12,9 @@
 </template>
     <script setup lang="ts">
 import { useRouter } from "vue-router";
+defineProps<{
+  title: string;
+}>();
 const { push } = useRouter();
 
 function logout() {

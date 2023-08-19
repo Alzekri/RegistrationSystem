@@ -7,7 +7,6 @@ import {
 const HomeView = () => import("../views/HomeView.vue");
 const StudentsView = () => import("../views/StudentsView.vue");
 const AdminsView = () => import("../views/AdminsView.vue");
-const AboutView = () => import("../views/AboutView.vue");
 
 const routes: RouteRecordRaw[] = [
   {
@@ -21,10 +20,6 @@ const routes: RouteRecordRaw[] = [
   {
     path: "/admin",
     component: AdminsView,
-  },
-  {
-    path: "/about",
-    component: AboutView,
   },
 ];
 export const router = createRouter({

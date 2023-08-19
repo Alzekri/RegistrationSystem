@@ -1,7 +1,7 @@
 
 <template>
   <!-- NavBar -->
-  <NavBar />
+  <NavBar title="ADMIN DASHBOARD" />
   <!--AddNew  -->
   <AddNew />
   <!--Table-->

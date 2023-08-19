@@ -2,46 +2,45 @@
 <template>
   <!--Table-->
   <div class="px-3">
-    <h6>Admin List( {{ admins.length }} )</h6>
+    <h6>Admin List( {{ students.length }} )</h6>
     <table class="table table-striped table-dark tables">
       <!--  <table class="table table-striped ">-->
       <thead class="bg-success text-light">
         <tr class="text-start">
           <th><FIcons class="pe-3" :icon="['fas', 'id-badge']" />ID</th>
           <th><FIcons class="pe-3" :icon="['fas', 'user']" />Name</th>
+          <th>
+            <FIcons class="pe-3" :icon="['fas', 'hashtag']" />UniversityID
+          </th>
+          <th>
+            <FIcons class="pe-3" :icon="['fas', 'building-columns']" />Major
+          </th>
+          <th><FIcons class="pe-3" :icon="['fas', 'hashtag']" />Semester</th>
           <th><FIcons class="pe-3" :icon="['fas', 'phone']" />Phone</th>
           <th><FIcons class="pe-3" :icon="['fas', 'envelope']" />Email</th>
-          <th><FIcons class="pe-3" :icon="['fas', 'lock']" />Password</th>
           <th><FIcons class="pe-3" :icon="['fas', 'user-gear']" />Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr
           class="text-start bodyText"
-          v-for="(admin, index) in admins"
+          v-for="(student, index) in students"
           :key="index"
         >
           <td>{{ index + 1 }}</td>
-          <td>{{ admin["name"] }}</td>
-          <td>{{ admin["phone"] }}</td>
-          <td>{{ admin["email"] }}</td>
-          <td>{{ admin["password"] }}</td>
+          <td>{{ student["name"] }}</td>
+          <td>{{ student["universityId"] }}</td>
+          <td>{{ student["major"] }}</td>
+          <td>{{ student["semeadminer"] }}</td>
+          <td>{{ student["phone"] }}</td>
+          <td>{{ student["email"] }}</td>
           <td>
-            <button
-              class="btn btn-warning"
-              @click="
-                update = true;
-                selectAdmin(admin);
-              "
-            >
+            <button class="btn btn-warning" @click="update = true">
               <FIcons :icon="['fas', 'user-edit']" />
             </button>
             <button
               class="btn btn-danger m-sm-0 m-md-2"
-              @click="
-                deleted = true;
-                selectAdmin(admin);
-              "
+              @click="deleted = true"
             >
               <FIcons :icon="['fas', 'user-times']" />
             </button>
@@ -123,9 +122,7 @@
 
           <hr />
           <div class="d-grid">
-            <button class="btn btn-warning" @click="updateAdmin()">
-              Update Admin
-            </button>
+            <button class="btn btn-warning">Update Admin</button>
           </div>
         </form>
       </div>
@@ -167,9 +164,7 @@
             ><br />
           </p>
           <div class="d-grid m-2">
-            <button class="btn btn-danger" @click="deleteAdmin()">
-              Yes, sure...
-            </button>
+            <button class="btn btn-danger">Yes, sure...</button>
           </div>
           <div class="d-grid m-2">
             <button class="btn btn-success" @click="deleted = false">
@@ -187,9 +182,9 @@ import { useDataStore } from "@/store/students";
 import { ref } from "vue";
 let update = ref(false);
 let deleted = ref(false);
-const { fetchAdminsData } = useDataStore();
-fetchAdminsData();
-const { admins } = storeToRefs(useDataStore());
+const { fetchStudentsData } = useDataStore();
+fetchStudentsData();
+const { students } = storeToRefs(useDataStore());
 let currentAdmin: {
   id: String;
   email: String;
@@ -197,33 +192,6 @@ let currentAdmin: {
   name: String;
   phone: String;
 };
-function selectAdmin(obj: any) {
-  currentAdmin = obj;
-}
-
-function toFormData(obj: any) {
-  var fd = new FormData();
-  for (var i in obj) {
-    fd.append(i, obj[i]);
-  }
-  return fd;
-}
-async function updateAdmin() {
-  let formUpdateAdminData = toFormData(currentAdmin);
-  const { updateAdmin } = useDataStore();
-  await updateAdmin(formUpdateAdminData);
-  fetchAdminsData();
-  update.value = false;
-}
-async function deleteAdmin() {
-  let formdeleteAdminData = toFormData(currentAdmin);
-
-  const { deleteAdmin } = useDataStore();
-  await deleteAdmin(formdeleteAdminData);
-  fetchAdminsData();
-
-  deleted.value = false;
-}
 </script>
     <style scoped lang="scss">
 .addnew {
